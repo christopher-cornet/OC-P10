@@ -7,18 +7,30 @@ import "./style.scss";
 const Slider = () => {
   const { data } = useData();
   const [index, setIndex] = useState(0);
+
+  // Sorts an array of data by date, in descending order. Events with the most recent dates will be at the top of the table.
   const byDateDesc = data?.focus.sort((evtA, evtB) =>
-    new Date(evtA.date) < new Date(evtB.date) ? -1 : 1
+    new Date(evtA.date) < new Date(evtB.date) ? -1 : 0
   );
+
+  /* If the current index is less than the array length minus 1, the index is simply increased by 1.
+    Otherwise, the index is reset to 0, meaning the first element of the array will be displayed. */
   const nextCard = () => {
-    setTimeout(
-      () => setIndex(index < byDateDesc.length ? index + 1 : 0),
-      5000
+    setIndex((prevIndex) =>
+      prevIndex < byDateDesc.length - 1 ? prevIndex + 1 : 0
     );
   };
+
+  // Trigger a function every time the index or byDateDesc array changes
   useEffect(() => {
-    nextCard();
-  });
+      const intervalId = setInterval(nextCard, 5000);
+      
+      // Clean up the interval when no longer needed
+      return () => clearInterval(intervalId);
+    },
+    [index, byDateDesc]
+  );
+
   return (
     <div className="SlideCardList">
       {byDateDesc?.map((event, idx) => (
@@ -42,10 +54,11 @@ const Slider = () => {
             <div className="SlideCard__pagination">
               {byDateDesc.map((_, radioIdx) => (
                 <input
+                  readOnly
                   key={`${event.id}`}
                   type="radio"
                   name="radio-button"
-                  checked={idx === radioIdx}
+                  checked={index === radioIdx}
                 />
               ))}
             </div>
