@@ -31,7 +31,6 @@ const Form = ({ onSuccess, onError }) => {
           <Field placeholder="" label="Prénom" />
           <Select
             selection={["Personel", "Entreprise"]}
-            onChange={() => null}
             label="Personel / Entreprise"
             type="large"
             titleEmpty
