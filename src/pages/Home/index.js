@@ -27,7 +27,7 @@ const Page = () => {
 
       // Return the event with the later date
       return currentDate > lastDate ? current : last;
-    }) : null; // If 'data' or 'events' is missing or empty, set 'latest' to null
+    }) : null; // If data or events is missing or empty, set latest to null
 
   return <>
     <header>
