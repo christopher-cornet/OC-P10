@@ -13,7 +13,22 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const {last} = useData()
+  const { data } = useData();
+
+  const latest =
+    // Check if data exists and contains events array with at least one element
+    data && data.events && data.events.length > 0 ?
+
+    // Reduce the events array to find the latest event
+    data.events.reduce((last, current) => {
+      // Convert dates from strings to Date objects
+      const lastDate = new Date(last.date);
+      const currentDate = new Date(current.date);
+
+      // Return the event with the later date
+      return currentDate > lastDate ? current : last;
+    }) : null; // If 'data' or 'events' is missing or empty, set 'latest' to null
+
   return <>
     <header>
       <Menu />
@@ -115,14 +130,17 @@ const Page = () => {
     </main>
     <footer className="row">
       <div className="col presta">
-        <h3>Notre derniére prestation</h3>
-        <EventCard
-          imageSrc={last?.cover}
-          title={last?.title}
-          date={new Date(last?.date)}
-          small
-          label="boom"
-        />
+        <h3>Notre dernière prestation</h3>
+        {latest && (
+          <EventCard
+            imageSrc={latest?.cover}
+            imageAlt={latest?.description}
+            title={latest?.title}
+            date={new Date(latest?.date)}
+            small
+            label={latest?.type}
+          />
+        )}
       </div>
       <div className="col contact">
         <h3>Contactez-nous</h3>
